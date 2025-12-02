@@ -1,0 +1,126 @@
+<div class="cart-container">
+  <div class="container">
+    <div class="cart-header">
+      <h1 class="page-title">
+        Shopping <span class="neon-text">Cart</span>
+      </h1>
+    </div>
+    
+    <!-- Empty Cart State -->
+    <div class="empty-cart" *ngIf="cartItems.length === 0">
+      <div class="empty-cart-content glass-card">
+        <i class="fas fa-shopping-cart empty-icon"></i>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added any delicious items to your cart yet. Start shopping to fill it up!</p>
+        <button class="btn btn-neon scale-on-hover" routerLink="/products">
+          <i class="fas fa-shopping-bag"></i>
+          Start Shopping
+        </button>
+      </div>
+    </div>
+    
+    <!-- Cart Content -->
+    <div class="cart-content" *ngIf="cartItems.length > 0">
+      <div class="cart-items">
+        <div class="cart-item glass-card" *ngFor="let item of cartItems; trackBy: trackByItemId">
+          <div class="item-image">
+            <img [src]="item.imageUrl" [alt]="item.name" loading="lazy">
+          </div>
+          
+          <div class="item-details">
+            <h4 class="item-name">{{item.name}}</h4>
+            <p class="item-category">{{item.category}}</p>
+            <p class="item-price">₹{{item.price}} each</p>
+          </div>
+          
+          <div class="item-quantity">
+            <button 
+              class="quantity-btn decrease-btn" 
+              (click)="decreaseQuantity(item)"
+              [disabled]="item.quantity <= 1">
+              <i class="fas fa-minus"></i>
+            </button>
+            <span class="quantity">{{item.quantity}}</span>
+            <button 
+              class="quantity-btn increase-btn" 
+              (click)="increaseQuantity(item)">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          
+          <div class="item-total">
+            <span class="total-price">₹{{item.price * item.quantity}}</span>
+            <button class="remove-btn" (click)="removeItem(item)">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cart Summary -->
+      <div class="cart-summary glass-card">
+        <h3 class="summary-title">Order Summary</h3>
+        
+        <div class="summary-row">
+          <span>Items ({{getTotalItems()}})</span>
+          <span>₹{{getSubtotal()}}</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>Delivery Fee</span>
+          <span *ngIf="getDeliveryFee() > 0">₹{{getDeliveryFee()}}</span>
+          <span *ngIf="getDeliveryFee() === 0" class="free-delivery">FREE</span>
+        </div>
+        
+        <div class="delivery-info-text">
+          <small class="free-delivery-message">
+            <i class="fas fa-info-circle"></i>
+            Delivery free if order is above ₹199
+          </small>
+        </div>
+        
+        <div class="summary-row" *ngIf="discount > 0">
+          <span>Discount</span>
+          <span style="color: #39ff14;">-₹{{discount}}</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>GST (18%)</span>
+          <span>₹{{getGST()}}</span>
+        </div>
+        
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span>₹{{getTotal()}}</span>
+        </div>
+        
+        <!-- Coupon Section -->
+        <div class="coupon-section">
+          <div class="coupon-input">
+            <input 
+              type="text" 
+              placeholder="Enter coupon code"
+              [(ngModel)]="couponCode"
+              #couponInput>
+            <button (click)="applyCoupon(couponInput.value)">
+              Apply
+            </button>
+          </div>
+          <p *ngIf="couponMessage" 
+             [style.color]="couponApplied ? '#39ff14' : '#ff4757'"
+             style="font-size: 0.9rem; margin: 0;">
+            {{couponMessage}}
+          </p>
+        </div>
+        
+        <button 
+          class="checkout-btn"
+          [disabled]="cartItems.length === 0"
+          routerLink="/checkout">
+          <i class="fas fa-credit-card"></i>
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

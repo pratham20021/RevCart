@@ -1,0 +1,95 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="hero-title">Fresh Groceries Delivered</h1>
+        <p class="hero-subtitle">Premium quality groceries delivered to your doorstep in 30 minutes</p>
+        <button class="hero-btn" routerLink="/products">Start Shopping</button>
+        
+        <div class="feature-badges">
+          <div class="badge">
+            <div class="badge-icon">🌿</div>
+            <span>100% Organic</span>
+          </div>
+          <div class="badge">
+            <div class="badge-icon">⏰</div>
+            <span>30 Min Delivery</span>
+          </div>
+          <div class="badge">
+            <div class="badge-icon">🛡️</div>
+            <span>Quality Assured</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modern Categories Section -->
+  <section class="section-wrapper categories-section">
+    <app-category-slider></app-category-slider>
+  </section>
+
+  <!-- Modern Trending Products -->
+  <section class="section-wrapper trending-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header-content">
+          <h2 class="section-heading trending-title">
+            <span class="gradient-text">Trending</span> Products
+          </h2>
+          <p class="section-subtitle">Discover the most popular items in your area</p>
+        </div>
+        <button class="btn btn-outline" routerLink="/products">
+          View All <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="product-grid">
+        <app-product-card 
+          *ngFor="let product of trendingProducts; trackBy: trackByProductId" 
+          [product]="product">
+        </app-product-card>
+      </div>
+      
+      <!-- Loading State -->
+      <div class="loading-container" *ngIf="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading more products...</p>
+      </div>
+      
+      <!-- No More Products -->
+      <div class="no-more-products" *ngIf="!hasMoreProducts && trendingProducts.length > 0">
+        <p>You've seen all our amazing products!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modern Features Section -->
+  <section class="section-wrapper features-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header-content">
+          <h2 class="section-heading">Why Choose RevCart?</h2>
+          <p class="section-subtitle">Experience the best grocery delivery service with premium quality and convenience</p>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <i class="fas fa-shipping-fast feature-icon"></i>
+          <h3>Lightning Fast Delivery</h3>
+          <p>Get your groceries delivered in just 30 minutes with our express delivery service</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-leaf feature-icon"></i>
+          <h3>100% Fresh & Organic</h3>
+          <p>Handpicked fresh produce from trusted farmers ensuring quality and freshness</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-shield-alt feature-icon"></i>
+          <h3>Quality Guaranteed</h3>
+          <p>Money back guarantee if you're not satisfied with our products and services</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

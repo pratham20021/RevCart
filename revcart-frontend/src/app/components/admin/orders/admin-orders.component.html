@@ -1,0 +1,222 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1 class="admin-title">
+      <i class="fas fa-shopping-cart"></i>
+      Order <span class="neon-text">Management</span>
+    </h1>
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn"
+        [class.active]="selectedStatus === 'all'"
+        (click)="filterByStatus('all')">
+        All Orders
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="selectedStatus === 'pending'"
+        (click)="filterByStatus('pending')">
+        Pending
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="selectedStatus === 'processing'"
+        (click)="filterByStatus('processing')">
+        Processing
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="selectedStatus === 'delivered'"
+        (click)="filterByStatus('delivered')">
+        Delivered
+      </button>
+    </div>
+  </div>
+
+  <!-- Recent Orders Section -->
+  <div class="recent-orders glass-card">
+    <div class="table-header">
+      <h3>Recent Orders</h3>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders">
+            <td>
+              <span class="order-id">{{order.orderId}}</span>
+            </td>
+            <td>
+              <span class="customer-name">{{order.customerName}}</span>
+            </td>
+            <td>
+              <span class="amount">{{order.amount | currency:'INR'}}</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+                {{order.status}}
+              </span>
+            </td>
+            <td>
+              <span class="order-date">{{order.createdAt | date:'short'}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="orders-table glass-card">
+    <div class="table-header">
+      <h3>Orders ({{filteredOrders.length}})</h3>
+      <div class="search-bar">
+        <input 
+          type="text" 
+          placeholder="Search orders..."
+          [(ngModel)]="searchQuery"
+          (input)="filterOrders()"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of filteredOrders">
+            <td>
+              <span class="order-id">#{{order.id}}</span>
+            </td>
+            <td>
+              <div class="customer-info">
+                <h4>{{order.customerName}}</h4>
+                <p>{{order.email}}</p>
+                <p>{{order.phone}}</p>
+              </div>
+            </td>
+            <td>
+              <span class="items-count">{{order.itemCount}} items</span>
+            </td>
+            <td>
+              <span class="amount">₹{{order.amount}}</span>
+            </td>
+            <td>
+              <span class="payment-method" [ngClass]="order.paymentMethod">
+                {{getPaymentMethodName(order.paymentMethod)}}
+              </span>
+            </td>
+            <td>
+              <select 
+                class="status-select"
+                [value]="order.status"
+                (change)="updateOrderStatus(order, $event)">
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </td>
+            <td>
+              <span class="order-date">{{order.date | date:'short'}}</span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon view" (click)="viewOrder(order)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-icon delete" (click)="deleteOrder(order.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content glass-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Order Details - #{{selectedOrder?.id}}</h3>
+        <button class="close-btn" (click)="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="order-details" *ngIf="selectedOrder">
+        <div class="details-grid">
+          <div class="detail-section">
+            <h4>Customer Information</h4>
+            <p><strong>Name:</strong> {{selectedOrder.customerName}}</p>
+            <p><strong>Email:</strong> {{selectedOrder.email}}</p>
+            <p><strong>Phone:</strong> {{selectedOrder.phone}}</p>
+          </div>
+
+          <div class="detail-section">
+            <h4>Order Information</h4>
+            <p><strong>Order ID:</strong> #{{selectedOrder.id}}</p>
+            <p><strong>Date:</strong> {{selectedOrder.date | date:'full'}}</p>
+            <p><strong>Status:</strong> 
+              <span class="status-badge" [ngClass]="selectedOrder.status">
+                {{selectedOrder.status | titlecase}}
+              </span>
+            </p>
+          </div>
+
+          <div class="detail-section">
+            <h4>Delivery Address</h4>
+            <p>{{selectedOrder.address}}</p>
+          </div>
+
+          <div class="detail-section">
+            <h4>Payment Information</h4>
+            <p><strong>Method:</strong> {{getPaymentMethodName(selectedOrder.paymentMethod)}}</p>
+            <p><strong>Amount:</strong> ₹{{selectedOrder.amount}}</p>
+            <p><strong>Status:</strong> 
+              <span class="payment-status">{{selectedOrder.paymentStatus}}</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="order-items">
+          <h4>Order Items</h4>
+          <div class="items-list">
+            <div class="order-item" *ngFor="let item of selectedOrder.items">
+              <img [src]="item.imageUrl" [alt]="item.name" class="item-image">
+              <div class="item-info">
+                <h5>{{item.name}}</h5>
+                <p>Quantity: {{item.quantity}}</p>
+                <p>Price: ₹{{item.price}} each</p>
+              </div>
+              <div class="item-total">
+                ₹{{item.price * item.quantity}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

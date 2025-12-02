@@ -1,0 +1,120 @@
+<div class="admin-products-container">
+  <div class="admin-header">
+    <div class="header-left">
+      <h1 class="admin-title">
+        <i class="fas fa-boxes"></i>
+        Product <span class="neon-text">Management</span>
+      </h1>
+      <p class="admin-subtitle">Manage your store inventory</p>
+    </div>
+    <div class="header-actions">
+      <button class="add-product-btn" (click)="addProduct()">
+        <i class="fas fa-plus"></i>
+        Add Product
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="filters-section glass-card">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="filterProducts()">
+    </div>
+    <div class="filter-controls">
+      <select [(ngModel)]="selectedCategory" (change)="filterProducts()" class="category-filter">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category">{{category | titlecase}}</option>
+      </select>
+      <select [(ngModel)]="sortBy" (change)="sortProducts()" class="sort-filter">
+        <option value="name">Sort by Name</option>
+        <option value="price">Sort by Price</option>
+        <option value="rating">Sort by Rating</option>
+        <option value="stock">Sort by Stock</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="products-table glass-card">
+    <div class="table-header">
+      <div class="header-cell image">Image</div>
+      <div class="header-cell name">Product Name</div>
+      <div class="header-cell category">Category</div>
+      <div class="header-cell price">Price</div>
+      <div class="header-cell rating">Rating</div>
+      <div class="header-cell stock">Stock</div>
+      <div class="header-cell status">Status</div>
+      <div class="header-cell actions">Actions</div>
+    </div>
+
+    <div class="product-row" *ngFor="let product of filteredProducts">
+      <div class="cell image">
+        <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+      </div>
+      <div class="cell name">
+        <div class="product-name">{{product.name}}</div>
+        <div class="product-description">{{product.description}}</div>
+      </div>
+      <div class="cell category">
+        <span class="category-pill">{{product.category}}</span>
+      </div>
+      <div class="cell price">
+        <div class="current-price">₹{{product.price}}</div>
+        <div class="original-price" *ngIf="product.originalPrice">₹{{product.originalPrice}}</div>
+      </div>
+      <div class="cell rating">
+        <div class="rating-display">
+          <i class="fas fa-star"></i>
+          <span>{{product.rating}}</span>
+        </div>
+      </div>
+      <div class="cell stock">
+        <div class="stock-info">
+          <span class="current-stock">{{product.currentStock}}</span>
+          <span class="stock-separator">/</span>
+          <span class="initial-stock">{{product.initialStock}}</span>
+        </div>
+      </div>
+      <div class="cell status">
+        <label class="toggle-switch">
+          <input type="checkbox" [checked]="product.inStock" (change)="toggleStatus(product.id)">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="cell actions">
+        <button class="action-btn edit" (click)="editProduct(product.id)" title="Edit Product">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn delete" (click)="deleteProduct(product.id)" title="Delete Product">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredProducts.length === 0">
+    <i class="fas fa-box-open"></i>
+    <h3>No products found</h3>
+    <p>Try adjusting your search or filters</p>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Confirm Delete</h3>
+      <button class="close-btn" (click)="cancelDelete()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this product? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cancelDelete()">Cancel</button>
+      <button class="btn-delete" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>

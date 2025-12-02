@@ -1,0 +1,115 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1 class="admin-title">
+      <i class="fas fa-tachometer-alt"></i>
+      Admin <span class="neon-text">Dashboard</span>
+    </h1>
+    <p class="admin-subtitle">Manage your RevCart store</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading dashboard data...</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div *ngIf="!loading" class="stats-grid">
+    <div class="stat-card glass-card">
+      <div class="stat-icon products">
+        <i class="fas fa-box"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{totalProducts}}</h3>
+        <p>Total Products</p>
+      </div>
+    </div>
+
+    <div class="stat-card glass-card">
+      <div class="stat-icon orders">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{totalOrders}}</h3>
+        <p>Total Orders</p>
+      </div>
+    </div>
+
+    <div class="stat-card glass-card">
+      <div class="stat-icon users">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{totalUsers}}</h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+
+    <div class="stat-card glass-card">
+      <div class="stat-icon revenue">
+        <i class="fas fa-rupee-sign"></i>
+      </div>
+      <div class="stat-info">
+        <h3>{{totalRevenue | currency:'INR'}}</h3>
+        <p>Total Revenue</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div *ngIf="!loading" class="quick-actions">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="actions-grid">
+      <button class="action-btn glass-card" routerLink="/admin/products">
+        <i class="fas fa-plus-circle"></i>
+        <span>Add Product</span>
+      </button>
+      
+      <button class="action-btn glass-card" routerLink="/admin/orders">
+        <i class="fas fa-list-alt"></i>
+        <span>View Orders</span>
+      </button>
+      
+      <button class="action-btn glass-card" routerLink="/admin/users">
+        <i class="fas fa-user-plus"></i>
+        <span>Manage Users</span>
+      </button>
+      
+      <button class="action-btn glass-card" routerLink="/admin/products">
+        <i class="fas fa-boxes"></i>
+        <span>Product Management</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recent Orders -->
+  <div *ngIf="!loading" class="recent-section">
+    <h2 class="section-title">Recent Orders</h2>
+    <div class="orders-table glass-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders">
+            <td>{{order.orderId}}</td>
+            <td>{{order.customerName}}</td>
+            <td>{{order.amount | currency:'INR'}}</td>
+            <td>
+              <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+                {{order.status}}
+              </span>
+            </td>
+            <td>{{order.createdAt | date:'short'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

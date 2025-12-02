@@ -1,0 +1,98 @@
+<div class="products-container">
+  <div class="container">
+    <div class="products-header">
+      <h1 class="page-title">
+        Our <span class="gradient-text">Products</span>
+      </h1>
+      <p class="page-subtitle">Fresh groceries delivered to your doorstep</p>
+    </div>
+    
+    <!-- Search and Filter Section -->
+    <div class="filters-section">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search for products..."
+          [(ngModel)]="searchQuery"
+          (input)="filterProducts()">
+        <button class="btn btn-neon" (click)="filterProducts()">
+          <i class="fas fa-search"></i>
+          Search
+        </button>
+      </div>
+      
+      <div class="filter-buttons">
+        <button 
+          class="filter-btn"
+          [class.active]="selectedCategory === 'all'"
+          (click)="filterByCategory('all')">
+          All Products
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedCategory === 'fruits'"
+          (click)="filterByCategory('Fruits & Vegetables')">
+          Fruits & Vegetables
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedCategory === 'dairy'"
+          (click)="filterByCategory('Dairy & Eggs')">
+          Dairy & Eggs
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedCategory === 'meat'"
+          (click)="filterByCategory('Meat & Seafood')">
+          Meat & Seafood
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedCategory === 'beverages'"
+          (click)="filterByCategory('Beverages')">
+          Beverages
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedCategory === 'snacks'"
+          (click)="filterByCategory('Snacks')">
+          Snacks
+        </button>
+      </div>
+    </div>
+    
+    <!-- Products Grid Container -->
+    <div class="products-section">
+      <div class="products-layout">
+        <!-- Advanced Filters Sidebar -->
+        <aside class="filters-sidebar">
+          <app-product-filters (filtersChanged)="onFiltersChanged($event)"></app-product-filters>
+        </aside>
+        
+        <!-- Products Grid -->
+        <div class="products-main">
+          <div class="product-grid" *ngIf="!loading && filteredProducts.length > 0">
+            <app-product-card 
+              *ngFor="let product of filteredProducts; trackBy: trackByProductId" 
+              [product]="product">
+            </app-product-card>
+          </div>
+      
+          <!-- Loading State -->
+          <div class="loading-state" *ngIf="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading delicious products...</p>
+          </div>
+          
+          <!-- Empty State -->
+          <div class="empty-state" *ngIf="!loading && filteredProducts.length === 0">
+            <i class="fas fa-search"></i>
+            <h3>No products found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

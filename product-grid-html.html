@@ -1,0 +1,15 @@
+<!-- Updated HTML for Home Component -->
+<div class="product-grid">
+  <app-product-card 
+    *ngFor="let product of trendingProducts; trackBy: trackByProductId" 
+    [product]="product">
+  </app-product-card>
+</div>
+
+<!-- Updated HTML for Product List Component -->
+<div class="product-grid">
+  <app-product-card 
+    *ngFor="let product of filteredProducts; trackBy: trackByProductId" 
+    [product]="product">
+  </app-product-card>
+</div>

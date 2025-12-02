@@ -1,0 +1,174 @@
+<div class="success-container">
+  <div class="container">
+    
+    <!-- Success Animation -->
+    <div class="success-animation">
+      <div class="checkmark-circle">
+        <div class="checkmark"></div>
+      </div>
+    </div>
+    
+    <!-- Success Message -->
+    <div class="success-message">
+      <h1 class="success-title">
+        Order <span class="neon-text">Confirmed!</span>
+      </h1>
+      <p class="success-subtitle">
+        Thank you for your order. We're preparing your fresh groceries!
+      </p>
+    </div>
+    
+    <!-- Order Details -->
+    <div class="order-details glass-card" *ngIf="orderSummary">
+      <div class="order-header">
+        <h3>
+          <i class="fas fa-receipt"></i>
+          Order Details
+        </h3>
+        <div class="order-id">
+          Order ID: <span class="neon-text">{{orderSummary.orderId}}</span>
+        </div>
+      </div>
+      
+      <div class="order-content">
+        <div class="order-info">
+          
+          <!-- Customer Information -->
+          <div class="info-section">
+            <h4><i class="fas fa-user"></i> Customer Information</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">Name:</span>
+                <span class="value">{{orderSummary.customerName}}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Email:</span>
+                <span class="value">{{orderSummary.email}}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Phone:</span>
+                <span class="value">{{orderSummary.phone}}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Delivery Information -->
+          <div class="info-section">
+            <h4><i class="fas fa-map-marker-alt"></i> Delivery Information</h4>
+            <div class="delivery-address">
+              <p>{{orderSummary.address.street}}</p>
+              <p>{{orderSummary.address.city}}, {{orderSummary.address.postalCode}}</p>
+            </div>
+            <div class="delivery-time">
+              <i class="fas fa-clock"></i>
+              <span>Estimated delivery: {{getFormattedDeliveryTime()}}</span>
+            </div>
+          </div>
+          
+          <!-- Payment Information -->
+          <div class="info-section">
+            <h4><i class="fas fa-credit-card"></i> Payment Information</h4>
+            <div class="payment-method">
+              <span class="payment-badge" [ngClass]="getPaymentClass()">
+                <i [class]="getPaymentIcon()"></i>
+                {{getPaymentMethodName()}}
+              </span>
+              <span class="payment-status success">
+                <i class="fas fa-check-circle"></i>
+                {{orderSummary.paymentMethod === 'cod' ? 'Pay on Delivery' : 'Payment Successful'}}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Order Items -->
+        <div class="order-items">
+          <h4><i class="fas fa-shopping-bag"></i> Order Items</h4>
+          
+          <div class="items-list">
+            <div class="order-item" *ngFor="let item of orderSummary.items">
+              <div class="item-image">
+                <img [src]="item.imageUrl" [alt]="item.name">
+              </div>
+              <div class="item-details">
+                <h5>{{item.name}}</h5>
+                <p>{{item.category}}</p>
+                <span class="quantity">Qty: {{item.quantity}}</span>
+              </div>
+              <div class="item-price">
+                ₹{{item.price * item.quantity}}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Order Total -->
+          <div class="order-total">
+            <div class="total-row">
+              <span>Subtotal:</span>
+              <span>₹{{orderSummary.subtotal}}</span>
+            </div>
+            <div class="total-row">
+              <span>Delivery Fee:</span>
+              <span>₹{{orderSummary.deliveryFee}}</span>
+            </div>
+            <div class="total-row">
+              <span>Taxes & Fees:</span>
+              <span>₹{{orderSummary.taxes}}</span>
+            </div>
+            <div class="total-row final-total">
+              <span>Total Paid:</span>
+              <span>₹{{orderSummary.total}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-ghost" routerLink="/products">
+        <i class="fas fa-shopping-bag"></i>
+        Continue Shopping
+      </button>
+      
+      <button class="btn btn-neon" [routerLink]="['/track-order', orderSummary?.orderId]">
+        <i class="fas fa-truck"></i>
+        Track Order
+      </button>
+      
+      <button class="btn btn-primary" routerLink="/">
+        <i class="fas fa-home"></i>
+        Back to Home
+      </button>
+    </div>
+    
+    <!-- Additional Information -->
+    <div class="additional-info glass-card">
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h4>24/7 Support</h4>
+          <p>Need help? Our customer support team is available 24/7 to assist you.</p>
+        </div>
+        
+        <div class="info-card">
+          <div class="info-icon">
+            <i class="fas fa-undo-alt"></i>
+          </div>
+          <h4>Easy Returns</h4>
+          <p>Not satisfied? Return your order within 24 hours for a full refund.</p>
+        </div>
+        
+        <div class="info-card">
+          <div class="info-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h4>Quality Guarantee</h4>
+          <p>We guarantee the freshness and quality of all our products.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

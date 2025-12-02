@@ -1,0 +1,16 @@
+@echo off
+echo Starting RevCart Full Stack Application...
+echo.
+echo Starting Backend in new window...
+start "RevCart Backend" cmd /k "cd backend && mvn spring-boot:run"
+echo.
+echo Waiting 10 seconds for backend to start...
+timeout /t 10 /nobreak
+echo.
+echo Starting Frontend in new window...
+start "RevCart Frontend" cmd /k "cd revcart-frontend && npm install && npm start"
+echo.
+echo Both services are starting...
+echo Backend: http://localhost:8080/api
+echo Frontend: http://localhost:4200
+pause

@@ -1,0 +1,98 @@
+<div class="filters-container">
+  <!-- Mobile Filter Toggle -->
+  <div class="filter-toggle-mobile">
+    <button class="btn-filter-toggle" (click)="toggleFilters()">
+      <i class="fas fa-filter"></i>
+      Filters
+      <span class="filter-count" *ngIf="hasActiveFilters()">{{hasActiveFilters() ? '●' : ''}}</span>
+    </button>
+  </div>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.show-mobile]="showFilters">
+    <div class="filters-header">
+      <h3>Filters</h3>
+      <button class="btn-clear" (click)="clearFilters()" *ngIf="hasActiveFilters()">
+        Clear All
+      </button>
+    </div>
+
+    <!-- Sort Options -->
+    <div class="filter-section">
+      <label class="filter-label">Sort By</label>
+      <select class="filter-select" (change)="onSortChange($any($event.target).value)">
+        <option *ngFor="let option of sortOptions" [value]="option.value">
+          {{option.label}}
+        </option>
+      </select>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="filter-section">
+      <label class="filter-label">Category</label>
+      <select class="filter-select" [(ngModel)]="filters.category" (change)="onFilterChange()">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{category.name}}
+        </option>
+      </select>
+    </div>
+
+    <!-- Price Range Filter -->
+    <div class="filter-section">
+      <label class="filter-label">Price Range</label>
+      <div class="price-ranges">
+        <div 
+          class="price-range-option" 
+          *ngFor="let range of priceRanges"
+          (click)="onPriceRangeSelect(range)"
+          [class.active]="filters.minPrice === range.min && filters.maxPrice === range.max"
+        >
+          {{range.label}}
+        </div>
+      </div>
+      
+      <!-- Custom Price Range -->
+      <div class="custom-price-range">
+        <div class="price-inputs">
+          <input 
+            type="number" 
+            placeholder="Min" 
+            [(ngModel)]="filters.minPrice" 
+            (change)="onFilterChange()"
+            class="price-input"
+          >
+          <span class="price-separator">-</span>
+          <input 
+            type="number" 
+            placeholder="Max" 
+            [(ngModel)]="filters.maxPrice" 
+            (change)="onFilterChange()"
+            class="price-input"
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Filter -->
+    <div class="filter-section" *ngIf="brands.length > 0">
+      <label class="filter-label">Brand</label>
+      <select class="filter-select" [(ngModel)]="filters.brand" (change)="onFilterChange()">
+        <option value="">All Brands</option>
+        <option *ngFor="let brand of brands" [value]="brand">
+          {{brand}}
+        </option>
+      </select>
+    </div>
+
+    <!-- Mobile Close Button -->
+    <div class="filter-actions-mobile">
+      <button class="btn-apply" (click)="toggleFilters()">
+        Apply Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Overlay for mobile -->
+  <div class="filter-overlay" *ngIf="showFilters" (click)="toggleFilters()"></div>
+</div>

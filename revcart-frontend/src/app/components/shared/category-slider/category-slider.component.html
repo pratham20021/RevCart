@@ -1,0 +1,31 @@
+<section class="categories-section">
+  <div class="container">
+    <h2 class="section-title">
+      Shop by <span class="gradient-text">Category</span>
+    </h2>
+    <p class="section-subtitle">Browse through our wide range of fresh groceries and essentials</p>
+    
+    <!-- Loading State -->
+    <div class="loading-grid" *ngIf="isLoading">
+      <div class="category-skeleton" *ngFor="let item of [1,2,3,4,5,6]"></div>
+    </div>
+    
+    <!-- Categories Grid -->
+    <div class="categories-grid" *ngIf="!isLoading && categories.length > 0">
+      <a 
+        class="category-card" 
+        *ngFor="let category of categories; trackBy: trackByCategory"
+        [routerLink]="['/products']" 
+        [queryParams]="{category: getCategoryDisplayName(category)}">
+        <span class="category-name">{{getCategoryDisplayName(category)}}</span>
+      </a>
+    </div>
+    
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && categories.length === 0">
+      <div class="empty-card">
+        <span class="empty-text">No Categories Available</span>
+      </div>
+    </div>
+  </div>
+</section>

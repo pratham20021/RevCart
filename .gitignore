@@ -1,0 +1,22 @@
+# Java / Maven / Spring Boot
+target/
+logs/
+*.log
+.mvn/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.settings/
+.classpath
+.project
+
+# OS / misc
+Thumbs.db
+.DS_Store

@@ -1,0 +1,74 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-subtitle">Sign in to your RevCart account</p>
+    </div>
+    
+    <form (ngSubmit)="onLogin()" class="auth-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input 
+          type="email" 
+          class="form-control focus-ring" 
+          [(ngModel)]="loginData.email"
+          name="email"
+          placeholder="Enter your email address"
+          required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input 
+          type="password" 
+          class="form-control focus-ring" 
+          [(ngModel)]="loginData.password"
+          name="password"
+          placeholder="Enter your password"
+          required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary w-full" [disabled]="loading">
+        <i class="fas fa-sign-in-alt" *ngIf="!loading"></i>
+        <div class="spinner" *ngIf="loading"></div>
+        {{ loading ? 'Signing In...' : 'Sign In' }}
+      </button>
+    </form>
+    
+    <div class="oauth-divider">
+      <span>or</span>
+    </div>
+    
+    <a href="http://localhost:8080/api/oauth2/authorization/google" class="btn btn-outline w-full oauth-btn">
+      <i class="fab fa-google"></i>
+      Continue with Google
+    </a>
+    
+    <!-- Demo Accounts Section -->
+    <!-- <div class="demo-accounts">
+      <h4>Demo Accounts</h4>
+      <div class="demo-account">
+        <span>Customer:</span>
+        <span class="demo-email">customer&#64;demo.com</span>
+      </div>
+      <div class="demo-account">
+        <span>Admin:</span>
+        <span class="demo-email">admin&#64;demo.com</span>
+      </div>
+      <div class="demo-account">
+        <span>Password:</span>
+        <span class="demo-email">password123</span>
+      </div>
+    </div> -->
+    
+    <div class="auth-footer">
+      <p>
+        <a routerLink="/forgot-password">Forgot Password?</a>
+      </p>
+      <p>
+        Don't have an account? 
+        <a routerLink="/signup">Sign up here</a>
+      </p>
+    </div>
+  </div>
+</div>

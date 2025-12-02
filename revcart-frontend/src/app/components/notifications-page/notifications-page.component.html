@@ -1,0 +1,46 @@
+<div class="notifications-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>Notifications</h1>
+      <button 
+        class="btn-mark-all" 
+        (click)="markAllAsRead()" 
+        *ngIf="hasUnreadNotifications()"
+      >
+        Mark All as Read
+      </button>
+    </div>
+
+    <div class="notifications-content" *ngIf="!loading">
+      <div class="notification-list" *ngIf="notifications.length > 0">
+        <div 
+          class="notification-card" 
+          *ngFor="let notification of notifications"
+          [class.unread]="!notification.read"
+          (click)="markAsRead(notification.id)"
+        >
+          <div class="notification-icon">
+            <i [class]="getNotificationIcon(notification.type)"></i>
+          </div>
+          <div class="notification-content">
+            <h3>{{notification.title}}</h3>
+            <p>{{notification.message}}</p>
+            <span class="notification-time">{{formatTime(notification.createdAt)}}</span>
+          </div>
+          <div class="unread-dot" *ngIf="!notification.read"></div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="notifications.length === 0">
+        <i class="fas fa-bell-slash"></i>
+        <h2>No notifications</h2>
+        <p>You don't have any notifications yet. When you place orders or receive updates, they'll appear here.</p>
+      </div>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading notifications...</p>
+    </div>
+  </div>
+</div>
