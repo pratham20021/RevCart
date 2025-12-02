@@ -1,0 +1,57 @@
+<div class="coupons-page">
+  <div class="container">
+    <div class="page-header">
+      <h1><i class="fas fa-tags"></i> Available Coupons</h1>
+      <p>Save more on your orders with these exclusive offers</p>
+    </div>
+
+    <div class="coupons-grid" *ngIf="!loading">
+      <div class="coupon-card" *ngFor="let coupon of coupons">
+        <div class="coupon-header">
+          <div class="coupon-icon">
+            <i [class]="getCouponIcon(coupon.type)"></i>
+          </div>
+          <div class="coupon-value">
+            {{getCouponValue(coupon)}}
+          </div>
+        </div>
+        
+        <div class="coupon-content">
+          <h3>{{coupon.title}}</h3>
+          <p>{{coupon.description}}</p>
+          
+          <div class="coupon-code-section">
+            <div class="coupon-code">
+              <span class="code-label">Code:</span>
+              <span class="code-value">{{coupon.code}}</span>
+            </div>
+            <button class="copy-btn" (click)="copyCouponCode(coupon.code)">
+              <i class="fas fa-copy"></i>
+              Copy
+            </button>
+          </div>
+          
+          <div class="coupon-conditions" *ngIf="coupon.firstOrderOnly || coupon.minOrderAmount">
+            <small *ngIf="coupon.firstOrderOnly">
+              <i class="fas fa-star"></i> Valid on first order only
+            </small>
+            <small *ngIf="coupon.minOrderAmount">
+              <i class="fas fa-shopping-cart"></i> Min order: ₹{{coupon.minOrderAmount}}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading coupons...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && coupons.length === 0">
+      <i class="fas fa-tags"></i>
+      <h2>No coupons available</h2>
+      <p>Check back later for exciting offers!</p>
+    </div>
+  </div>
+</div>

@@ -77,15 +77,32 @@ public class NotificationController {
     public ResponseEntity<?> createTestNotification(Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            
+            // Create multiple test notifications
             notificationService.createNotification(
                 userPrincipal.getId(),
-                "Test Notification",
-                "This is a test notification to verify the system is working.",
+                "Order Placed Successfully",
+                "Your order #12345 has been placed and is being processed.",
                 "ORDER_PLACED"
             );
-            return ResponseEntity.ok("Test notification created");
+            
+            notificationService.createNotification(
+                userPrincipal.getId(),
+                "Payment Confirmed",
+                "Payment of ₹1,250 has been successfully processed.",
+                "PAYMENT_SUCCESS"
+            );
+            
+            notificationService.createNotification(
+                userPrincipal.getId(),
+                "Order Packed",
+                "Your order is packed and ready for delivery.",
+                "ORDER_PACKED"
+            );
+            
+            return ResponseEntity.ok("Test notifications created successfully");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 }

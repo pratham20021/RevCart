@@ -4,6 +4,8 @@ import com.revcart.entity.Product;
 import com.revcart.entity.User;
 import com.revcart.repository.ProductRepository;
 import com.revcart.repository.UserRepository;
+import com.revcart.service.CouponService;
+import com.revcart.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +24,12 @@ public class DataInitializer implements CommandLineRunner {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private CouponService couponService;
+    
+    @Autowired
+    private CategoryService categoryService;
     
     @Override
     public void run(String... args) throws Exception {
@@ -61,6 +69,12 @@ public class DataInitializer implements CommandLineRunner {
         if (productRepository.count() == 0) {
             createSampleProducts();
         }
+        
+        // Initialize categories
+        categoryService.initializeDefaultCategories();
+        
+        // Initialize coupons
+        couponService.initializeCoupons();
     }
     
     private void createSampleProducts() {

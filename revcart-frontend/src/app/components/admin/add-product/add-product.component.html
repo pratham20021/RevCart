@@ -29,17 +29,22 @@
         
         <div class="form-group">
           <label for="category">Category *</label>
-          <select 
-            id="category"
-            [(ngModel)]="product.category"
-            name="category"
-            class="form-control"
-            required>
-            <option value="">Select Category</option>
-            <option *ngFor="let category of categories" [value]="category">
-              {{category | titlecase}}
-            </option>
-          </select>
+          <div class="category-input-group">
+            <select 
+              id="category"
+              [(ngModel)]="product.category"
+              name="category"
+              class="form-control category-select"
+              required>
+              <option value="">Select Category</option>
+              <option *ngFor="let category of categories" [value]="category.name">
+                {{category.name}}
+              </option>
+            </select>
+            <button type="button" class="add-category-btn" (click)="toggleCategoryModal()">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -138,4 +143,52 @@
       </button>
     </div>
   </form>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal-overlay" *ngIf="showCategoryModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create New Category</h3>
+      <button class="close-btn" (click)="toggleCategoryModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="createCategory()" #categoryForm="ngForm">
+        <div class="form-group">
+          <label for="categoryName">Category Name *</label>
+          <input 
+            type="text" 
+            id="categoryName"
+            [(ngModel)]="newCategory.name"
+            name="categoryName"
+            class="form-control"
+            placeholder="Enter category name"
+            required>
+        </div>
+        
+        <div class="form-group">
+          <label for="categoryDescription">Description</label>
+          <textarea 
+            id="categoryDescription"
+            [(ngModel)]="newCategory.description"
+            name="categoryDescription"
+            class="form-control"
+            rows="3"
+            placeholder="Enter category description"></textarea>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="toggleCategoryModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn-submit" [disabled]="!categoryForm.valid">
+            <i class="fas fa-plus"></i>
+            Create Category
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

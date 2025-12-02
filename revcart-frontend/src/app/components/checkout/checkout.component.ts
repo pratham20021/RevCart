@@ -4,6 +4,9 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService, CartItem } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
+import { PaymentService } from '../../services/payment.service';
+import { OrderService } from '../../services/order.service';
+import { CouponService, Coupon } from '../../services/coupon.service';
 
 
 
@@ -50,12 +53,21 @@ export class CheckoutComponent implements OnInit {
   showInvoice = false;
   invoiceData: any = null;
   
+  // Coupon related properties
+  couponCode = '';
+  appliedCoupon: Coupon | null = null;
+  couponDiscount = 0;
+  couponError = '';
+  
   @ViewChild('invoiceContent') invoiceContent!: ElementRef;
   
   constructor(
     private router: Router,
     private cartService: CartService,
-    private checkoutService: CheckoutService
+    private checkoutService: CheckoutService,
+    private paymentService: PaymentService,
+    private orderService: OrderService,
+    private couponService: CouponService
   ) {}
   
   ngOnInit() {
@@ -74,7 +86,10 @@ export class CheckoutComponent implements OnInit {
   
   completeUpiPayment() {
     this.showUpiModal = false;
-    this.generateInvoice();
+    // Simulate UPI payment processing
+    setTimeout(() => {
+      this.generateInvoice();
+    }, 500);
   }
   
   closeInvoice() {
@@ -95,41 +110,62 @@ export class CheckoutComponent implements OnInit {
   }
   
   getDeliveryFee(): number {
-    return this.getSubtotal() > 199 ? 0 : this.baseDeliveryFee;
+    const baseFee = this.getSubtotal() > 199 ? 0 : this.baseDeliveryFee;
+    // Apply free delivery coupon
+    if (this.appliedCoupon?.type === 'FREE_DELIVERY') {
+      return 0;
+    }
+    return baseFee;
   }
   
   getTotal(): number {
-    return this.getSubtotal() + this.getDeliveryFee() + this.getGST();
+    return this.getSubtotal() + this.getDeliveryFee() + this.getGST() - this.couponDiscount;
   }
   
   getItemCount(): number {
     return this.cartItems.reduce((total, item) => total + item.quantity, 0);
   }
   
-  onSubmit() {
+  async onSubmit() {
     if (this.isProcessing) return;
-    
-    if (this.orderData.paymentMethod === 'upi') {
-      this.showUpiModal = true;
-      return;
-    }
     
     this.isProcessing = true;
     
-    // Process order with stock validation
-    this.checkoutService.processOrder(this.cartItems).subscribe(result => {
-      if (!result.success) {
-        alert(result.message);
-        this.isProcessing = false;
-        return;
-      }
-      
-      // Simulate order processing
-      setTimeout(() => {
+    try {
+      // Create order data
+      const orderPayload = {
+        items: this.cartItems.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        total: this.getTotal(),
+        customerName: this.orderData.customerName,
+        email: this.orderData.email,
+        phone: this.orderData.phone,
+        address: this.orderData.address,
+        paymentMethod: this.orderData.paymentMethod
+      };
+
+      if (this.orderData.paymentMethod === 'cod') {
+        // Process COD payment
+        await this.paymentService.processCOD(orderPayload).toPromise();
         this.generateInvoice();
-        this.isProcessing = false;
-      }, 2000);
-    });
+      } else if (this.orderData.paymentMethod === 'upi') {
+        // Show UPI modal for UPI payment
+        this.showUpiModal = true;
+      } else if (this.orderData.paymentMethod === 'card') {
+        // Process card payment (simulate success for demo)
+        setTimeout(() => {
+          this.generateInvoice();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('Payment failed:', error);
+      alert('Payment failed. Please try again.');
+    } finally {
+      this.isProcessing = false;
+    }
   }
   
   generateInvoice() {
@@ -168,6 +204,34 @@ export class CheckoutComponent implements OnInit {
     sessionStorage.setItem('orderSummary', JSON.stringify(this.invoiceData));
     
     this.showInvoice = true;
+  }
+  
+  applyCoupon() {
+    if (!this.couponCode.trim()) {
+      this.couponError = 'Please enter a coupon code';
+      return;
+    }
+    
+    this.couponService.validateCoupon(this.couponCode, this.getSubtotal(), this.baseDeliveryFee).subscribe({
+      next: (response) => {
+        this.appliedCoupon = response.coupon;
+        this.couponDiscount = response.discount;
+        this.couponError = '';
+        alert(`Coupon applied! You saved ₹${this.couponDiscount}`);
+      },
+      error: (error) => {
+        this.couponError = error.error || 'Invalid coupon code';
+        this.appliedCoupon = null;
+        this.couponDiscount = 0;
+      }
+    });
+  }
+  
+  removeCoupon() {
+    this.appliedCoupon = null;
+    this.couponDiscount = 0;
+    this.couponCode = '';
+    this.couponError = '';
   }
   
   private generateOrderId(): string {

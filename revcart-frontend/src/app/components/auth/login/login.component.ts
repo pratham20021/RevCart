@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService, LoginRequest } from '../../../services/auth.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class LoginComponent {
   
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
   
   onLogin() {
@@ -39,6 +41,18 @@ export class LoginComponent {
       error: (error) => {
         this.loading = false;
         console.error('Login failed:', error);
+      }
+    });
+  }
+  
+  createTestNotifications() {
+    this.http.post('http://localhost:8080/api/notifications/test', {}).subscribe({
+      next: (response) => {
+        alert('Test notifications created! Check the bell icon.');
+      },
+      error: (error) => {
+        console.error('Error creating test notifications:', error);
+        alert('Please login first to create test notifications.');
       }
     });
   }

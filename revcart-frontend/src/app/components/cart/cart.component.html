@@ -94,24 +94,7 @@
           <span>₹{{getTotal()}}</span>
         </div>
         
-        <!-- Coupon Section -->
-        <div class="coupon-section">
-          <div class="coupon-input">
-            <input 
-              type="text" 
-              placeholder="Enter coupon code"
-              [(ngModel)]="couponCode"
-              #couponInput>
-            <button (click)="applyCoupon(couponInput.value)">
-              Apply
-            </button>
-          </div>
-          <p *ngIf="couponMessage" 
-             [style.color]="couponApplied ? '#39ff14' : '#ff4757'"
-             style="font-size: 0.9rem; margin: 0;">
-            {{couponMessage}}
-          </p>
-        </div>
+
         
         <button 
           class="checkout-btn"

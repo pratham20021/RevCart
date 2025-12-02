@@ -17,6 +17,7 @@ import { OAuth2RedirectComponent } from './components/auth/oauth2-redirect/oauth
 import { TrackOrderComponent } from './components/orders/track-order/track-order.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { NotificationsPageComponent } from './components/notifications-page/notifications-page.component';
+import { CouponsComponent } from './components/coupons/coupons.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,10 @@ export const routes: Routes = [
   {
     path: 'notifications',
     component: NotificationsPageComponent
+  },
+  {
+    path: 'coupons',
+    component: CouponsComponent
   },
   {
     path: 'admin',

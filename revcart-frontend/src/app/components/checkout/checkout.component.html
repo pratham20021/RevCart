@@ -210,6 +210,36 @@
           </div>
         </div>
         
+        <!-- Coupon Section -->
+        <div class="coupon-section">
+          <h4><i class="fas fa-tags"></i> Apply Coupon</h4>
+          <div class="coupon-input-group" *ngIf="!appliedCoupon">
+            <input 
+              type="text" 
+              class="coupon-input" 
+              [(ngModel)]="couponCode"
+              placeholder="Enter coupon code"
+              [class.error]="couponError">
+            <button class="apply-coupon-btn" (click)="applyCoupon()">
+              Apply
+            </button>
+          </div>
+          
+          <div class="applied-coupon" *ngIf="appliedCoupon">
+            <div class="coupon-info">
+              <i class="fas fa-check-circle"></i>
+              <span>{{appliedCoupon.title}} applied</span>
+            </div>
+            <button class="remove-coupon-btn" (click)="removeCoupon()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="coupon-error" *ngIf="couponError">
+            <small>{{couponError}}</small>
+          </div>
+        </div>
+        
         <div class="summary-totals">
           <div class="summary-row">
             <span>Items ({{getItemCount()}})</span>
@@ -232,6 +262,11 @@
           <div class="summary-row">
             <span>GST (18%)</span>
             <span>₹{{getGST()}}</span>
+          </div>
+          
+          <div class="summary-row discount-row" *ngIf="couponDiscount > 0">
+            <span>Coupon Discount</span>
+            <span class="discount-amount">-₹{{couponDiscount}}</span>
           </div>
           
           <div class="summary-divider"></div>
